@@ -1,5 +1,7 @@
 package com.promineotech.zwkz.controllers;
 import com.promineotech.zwkz.entities.Accounts;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 public interface AccountsController {
     /**
@@ -21,6 +23,10 @@ public interface AccountsController {
      * @return The updated or modified, otherwise null
      */
     Accounts update(String id, Accounts input);
+
+
+    Accounts getBalance(String id);
+
     /**
      * Deletes a User by its unique id.
      * @param id The unique id
@@ -28,5 +34,7 @@ public interface AccountsController {
      */
     Accounts delete(String id);
     Accounts getAccountNumber(String id);
-    Accounts getBalance (String id);
+
+
+
 }

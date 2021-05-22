@@ -21,17 +21,17 @@ public class AccountsJdbcRepository implements AccountsRepository {
 
     @Override
     public Accounts get(String id) {
-        String sql = "Select account_id" +
-                " From accounts" +
-                " Where account_id = :account_id";
+        String sql = " Select account_id,balance " +
+                " From accounts " +
+                " Where account_id = :account_id ";
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("account_id", id);
         List<Accounts> accounts = _provider.query(sql, parameters, new RowMapper<Accounts>() {
             @Override
             public Accounts mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return Accounts.builder()
-                        .account_number(Integer.parseInt(rs.getString("account_id")))
-
+                        .account_id(rs.getString("account_id"))
+                        .balance(rs.getInt("balance"))
                         .build();
             }
         });
@@ -60,17 +60,16 @@ public class AccountsJdbcRepository implements AccountsRepository {
 
     @Override
     public Accounts getBalance(String id) {
-        String sql = "Select balance" +
-                " From accounts" +
-                " Where account_id = :account_id";
+        String sql = " Select balance " +
+                " From accounts " +
+                " Where account_id = :account_id ";
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("account_id", id);
         List<Accounts> accounts = _provider.query(sql, parameters, new RowMapper<Accounts>() {
             @Override
             public Accounts mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return Accounts.builder()
-                        .balance(Integer.parseInt(rs.getString("account_id")))
-
+                        .balance(rs.getInt("balance"))
                         .build();
             }
         });
@@ -90,7 +89,7 @@ public class AccountsJdbcRepository implements AccountsRepository {
             @Override
             public Accounts mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return Accounts.builder()
-                        .account_number(Integer.parseInt(rs.getString("account_id")))
+                        .account_number(rs.getInt("account_id"))
 
                         .build();
             }

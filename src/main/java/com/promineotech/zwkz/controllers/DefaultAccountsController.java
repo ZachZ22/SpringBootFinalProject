@@ -34,7 +34,7 @@ public class DefaultAccountsController implements AccountsController{
         throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                 String.format("Account '%s' was not found.", id));
     }
-    @RequestMapping(value = "/balance", method = RequestMethod.GET)
+    @GetMapping(value = "/balance")
     @Override
     public Accounts getBalance(@PathVariable String id) {
         Accounts accounts = _service.get(id);

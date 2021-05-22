@@ -80,14 +80,14 @@ public class UsersJdbcRepository implements UsersRepository {
         Users existing = get(input.getUser_id());
         if (existing != null) {
             // Update the item if exists
-            String sql = "UPDATE users SET" +
-                    " user_id = :user_id" +
-                    " first_name = :first_name" +
-                    " last_name = :last_name" +
-                    " user_name = :user_name" +
-                    " password = :password" + // read about salt and hashing password to avoid storing plain text password
-                    " WHERE" +
-                    " user_id = existing_user_id";
+            String sql = " UPDATE users SET " +
+                    " user_id = :user_id, " +
+                    " first_name = :first_name, " +
+                    " last_name = :last_name, " +
+                    " user_name = :user_name, " +
+                    " password = :password " + // read about salt and hashing password to avoid storing plain text password
+                    " WHERE " +
+                    " user_id = :existing_user_id";
 
             MapSqlParameterSource parameters = new MapSqlParameterSource();
             parameters.addValue("user_id", input.getUser_id());
