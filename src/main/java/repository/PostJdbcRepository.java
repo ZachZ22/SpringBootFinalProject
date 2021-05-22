@@ -37,7 +37,7 @@ public class PostsJdbcRepository implements PostsRepository {
                         .build();
             }
         });
-        if (post.isEmpty()) {
+        if (post.isEmpty())  {
             return null;
         }
         return post.get(0);
