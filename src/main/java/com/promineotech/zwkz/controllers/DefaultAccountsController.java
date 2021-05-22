@@ -2,19 +2,17 @@
 package com.promineotech.zwkz.controllers;
 
 import com.promineotech.zwkz.entities.Accounts;
+import com.promineotech.zwkz.services.AccountsService;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import com.promineotech.zwkz.services.DefaultAccountsService;
 
 @RestController
 public class DefaultAccountsController implements AccountsController{
-    private DefaultAccountsService _service;
-    //public DefaultAccountsController(AccountsService service){_service = service;}
-    @RequestMapping(value = "/accounts/{id}", method = RequestMethod.GET)
+    private AccountsService _service;
+    public DefaultAccountsController(AccountsService service){this._service = service;}
+    @GetMapping(value = "/accounts/{id}")
     @Override
     public Accounts get(@PathVariable String id) {
         Accounts accounts = _service.get(id);

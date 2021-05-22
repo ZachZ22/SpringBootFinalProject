@@ -13,7 +13,7 @@ public class Accounts {
     private String account_id;
     private String user_id;
     private int account_number;
-    private int balance;
+    private int balance; // double
 
 
 }

@@ -6,10 +6,9 @@ import com.promineotech.zwkz.repository.PostsRepository;
 
 @Service
 public class DefaultPostsService implements PostsService {
-    private PostsRepository _repository;
+    private PostsRepository _postsRepository;
 
-    public DefaultPostsService(PostsRepository repository) {
-        _repository = repository;
+    public DefaultPostsService(PostsRepository repository) { _postsRepository = repository;
     }
 
     @Override
@@ -17,7 +16,7 @@ public class DefaultPostsService implements PostsService {
         if ((id == null) || (id.isEmpty())) {
             return (null);
         }
-        return _repository.get(id);
+        return _postsRepository.get(id);
     }
 
     @Override
@@ -25,7 +24,7 @@ public class DefaultPostsService implements PostsService {
         if(input != null) {
             Posts existing = get(input.getPost_id());
             if (existing == null) {
-                return (_repository.create(input));
+                return (_postsRepository.create(input));
             }
         }
         return (null);
@@ -36,7 +35,12 @@ public class DefaultPostsService implements PostsService {
         if((id == null) || (id.isEmpty())) {
             return(null);
         }
-        return (_repository.delete(id));
+        return (_postsRepository.delete(id));
+    }
+
+    @Override
+    public Posts save(Posts input) {
+        return null;
     }
 
     @Override
@@ -51,7 +55,7 @@ public class DefaultPostsService implements PostsService {
         if((newId == null) || (newId.isEmpty())) {
             input.setPost_id(id);
         }
-        return (_repository.save(id, input));
+        return (_postsRepository.save(id,input));
     }
 
 }

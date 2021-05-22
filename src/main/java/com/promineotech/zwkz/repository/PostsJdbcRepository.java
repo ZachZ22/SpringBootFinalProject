@@ -20,12 +20,13 @@ public class PostsJdbcRepository implements PostsRepository {
     private NamedParameterJdbcTemplate _provider;
 
     @Override
-    public Posts get(String  id) {
-        String sql = "SELECT post " +
-                "FROM posts " +
-                "WHERE post_id = : post_id";
-        Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("post_Id", id);
+    public Posts get(String id) {
+        //SELECT post FROM posts WHERE post_id = 4;
+        String sql = "SELECT post_id,post" +
+                " FROM posts" +
+                " WHERE post_id = :post_id";
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("post_id", id);
 
         List<Posts> post = _provider.query(sql, parameters, new RowMapper<Posts>() {
 
@@ -84,27 +85,31 @@ public class PostsJdbcRepository implements PostsRepository {
 
     }
 
+
     @Override
-    public Posts save(String id, Posts input) {
-        if ((id == null) || (id.isEmpty())) {
-            return(null);
-        }
+    public Posts save(String id,Posts input) {
+       // if ((id == null) || (id.isEmpty())) {
+            //return(null);
+       // }
         //Check if items exist
+        //Posts existing = get(input.getPost_id());
         Posts existing = get(id);
         if (existing != null) {
             //Update existing item
             String sql = "UPDATE post SET " +
-                    "post_id = :title_id, " +
+                    "post_id = :post_id, " +
                     "user_id = :user_id, " +
                     "post = :post, " +
-                    "date_time = :date_time";
+                    "date_time = :date_time, " +
+                    "WHERE " +
+                    "post_id = existing_post_id";
 
             MapSqlParameterSource parameters = new MapSqlParameterSource();
             parameters.addValue("post_id", input.getPost_id());
             parameters.addValue("user_id", input.getUser_id());
             parameters.addValue("post", input.getPost());
             parameters.addValue("date_time", input.getDate_time());
-
+            parameters.addValue("existing_post_id", id);
             int numRows = _provider.update(sql, parameters);
             if (numRows == 1) {
                 return(get(input.getPost_id()));
@@ -112,5 +117,7 @@ public class PostsJdbcRepository implements PostsRepository {
         }
         return null;
     }
+
+
 
 }

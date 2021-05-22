@@ -12,9 +12,9 @@ public class DefaultPostsController implements PostsController {
     private PostsService _service;
 
     public DefaultPostsController(PostsService service) {
-        _service = service;
+        this._service = service;
     }
-    @RequestMapping(value = "/posts/{id}", method=RequestMethod.GET)
+    @GetMapping(value = "/posts/{id}")
     @Override
     public Posts get(@PathVariable String id) {
         Posts posts = _service.get(id);

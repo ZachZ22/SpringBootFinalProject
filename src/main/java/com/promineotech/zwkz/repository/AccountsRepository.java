@@ -5,10 +5,16 @@ public interface AccountsRepository {
     Accounts get(String id);
     Accounts create(Accounts input);
     Accounts save(String id, Accounts input);
+
+    Accounts save(Accounts input);
+
     Accounts saveBalance (String id, String UpdateBalanceAmount);
 
     Accounts getAccountNumber(String id);
     Accounts getBalance (String id);
     Accounts delete(String id);
+    Accounts getByUserId(String userId);
+
+
 
 }

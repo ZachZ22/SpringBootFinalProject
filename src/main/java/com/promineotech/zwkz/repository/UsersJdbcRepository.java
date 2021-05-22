@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,6 +14,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+
+
+@Repository
 public class UsersJdbcRepository implements UsersRepository {
     @Autowired
     private NamedParameterJdbcTemplate _provider;
@@ -19,8 +25,8 @@ public class UsersJdbcRepository implements UsersRepository {
     @Override
     public Users get(String id) {
         String sql = "Select user_id,user_name" +
-                "From users" +
-                "Where user_id = :user_id";
+                " From users" +
+                " Where user_id = :user_id";
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("user_id", id);
 
@@ -38,7 +44,7 @@ public class UsersJdbcRepository implements UsersRepository {
         }
         return users.get(0);
     }
-
+//********************************************************************************************************************************************
     @Override
     public Users create(Users input) {
         if (input != null) {
@@ -59,26 +65,29 @@ public class UsersJdbcRepository implements UsersRepository {
         return (null);
     }
 
+
+
     @Override
-    public Users save(String id, Users input) {
-        if ((id == null) || (id.isEmpty())) {
-            return (null);
-        }
+    //public Users save(String id, Users input) {
+        public Users save(String id,Users input) {
+//        if ((id == null) || (id.isEmpty())) {
+//            return (null);
+//        }
         if (input == null) {
             return null;
         }
         //Check if User Exists
-        Users existing = get(id);
+        Users existing = get(input.getUser_id());
         if (existing != null) {
             // Update the item if exists
             String sql = "UPDATE users SET" +
-                    "user_id = :user_id" +
-                    "first_name = :first_name" +
-                    "last_name = :last_name" +
-                    "user_name = :user_name" +
-                    "password = :password" +
-                    "WHERE" +
-                    "user_id = existing_user_id";
+                    " user_id = :user_id" +
+                    " first_name = :first_name" +
+                    " last_name = :last_name" +
+                    " user_name = :user_name" +
+                    " password = :password" + // read about salt and hashing password to avoid storing plain text password
+                    " WHERE" +
+                    " user_id = existing_user_id";
 
             MapSqlParameterSource parameters = new MapSqlParameterSource();
             parameters.addValue("user_id", input.getUser_id());
@@ -86,14 +95,14 @@ public class UsersJdbcRepository implements UsersRepository {
             parameters.addValue("last_name", input.getLast_name());
             parameters.addValue("user_name", input.getUser_name());
             parameters.addValue("password", input.getPassword());
-
+            parameters.addValue("existing_user_id", id);
             int numRows = _provider.update(sql, parameters);
             if (numRows == 1) {
                 return (get(input.getUser_id()));
             }
 
         }
-        return (null);
+        return null;
 
     }
 

@@ -39,5 +39,5 @@ public interface UsersService {
      * @param id2   is the receiver's id
      * @return the sender
      */
-    Users updateTransaction(String id1, String id2, double amountToSend);
+    Users sendMoney(String id1, String id2, double amountToSend);
 }

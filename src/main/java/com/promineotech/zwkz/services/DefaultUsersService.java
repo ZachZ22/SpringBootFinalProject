@@ -1,26 +1,35 @@
 package com.promineotech.zwkz.services;
 
+import com.promineotech.zwkz.entities.Accounts;
 import com.promineotech.zwkz.entities.Users;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.promineotech.zwkz.repository.UsersJdbcRepository;
+import com.promineotech.zwkz.repository.AccountsRepository;
+import com.promineotech.zwkz.repository.UsersRepository;
+import org.springframework.stereotype.Service;
 
+
+@Service
 public class DefaultUsersService implements UsersService{
-    private UsersJdbcRepository _repository;
-//    public DefaultUsersService(UsersRepository repository){_repository = repository;}
+    private UsersRepository _usersRepository;
+    private AccountsRepository _accountsRepository;
 
-    @Autowired
-    private Users user;
+    public DefaultUsersService(UsersRepository usersRepository, AccountsRepository accountsRepository){
+        this._usersRepository = usersRepository;
+        this._accountsRepository = accountsRepository;
+    }
+
+    //@Autowired
+    //private Users user;
 
 
     // @Autowired
-    private DefaultFriendsService friendService;
+   // private DefaultFriendsService friendService;
 
     @Override
     public Users get(String id) {
         if ((id == null) || (id.isEmpty())){
             return (null);
         }
-       return _repository.get(id);
+       return _usersRepository.get(id);
     }
 
     @Override
@@ -28,7 +37,7 @@ public class DefaultUsersService implements UsersService{
         if(input != null){
             Users existing = get(input.getUser_name());
             if(existing == null){
-                return (_repository.create(input));
+                return (_usersRepository.create(input));
             }
         }
         return (null);
@@ -49,7 +58,7 @@ public class DefaultUsersService implements UsersService{
             input.setUser_id(id);
         }
 
-        return (_repository.save(id, input));
+        return (_usersRepository.save(id,input));
     }
 
     @Override
@@ -57,38 +66,36 @@ public class DefaultUsersService implements UsersService{
         if ((id == null) || (id.isEmpty())) {
             return(null);
         }
-        return(_repository.delete(id));
+        return(_usersRepository.delete(id));
     }
 
     @Override
-    public Users updateTransaction(String id1, String id2, double amountToSend) {
-       Users user1 = _repository.get(id1);
-       Users user2 = _repository.get(id2);
-
-
-
-       if((user1 != null) && (user2 !=null)){
+    public Users sendMoney(String senderId, String receivingId, double amountToSend) {
+       Users sender = _usersRepository.get(senderId);
+       Users receiver = _usersRepository.get(receivingId);
+       Accounts senderAccount = _accountsRepository.getByUserId(senderId);
+       Accounts receiverAccount = _accountsRepository.getByUserId(receivingId);
+       if((sender != null) && (receiver !=null)){
            //update this user's account balance
-
-           // this logic should come from the account's service
-           // where it'll deduct the acmount from sender's account and
+            senderAccount.setBalance((int)(senderAccount.getBalance() - amountToSend));
+            receiverAccount.setBalance((int)(receiverAccount.getBalance() + amountToSend));
+           // this logic should come from the account's service.
+           // where it'll deduct the account from sender's account and
            //add it to receiver's account
-
+            _accountsRepository.save(senderId, senderAccount); // try catch
+            _accountsRepository.save(receivingId, receiverAccount); // try catch
            // assign the sender's details to the user from line 14
 
            //account service should include two methos for sure
            // and these two methods should be 1. reduces the balance
            //2. adds the money into the account
        }
-       return user;
-
-
-
+       return null;
     }
 
     //check to see if the sender's id exists first
     /**
-     * if sender's id exists, then reduce teh balance from their account
+     * if sender's id exists, then reduce the balance from their account
      *
      * Then, also check if the receiver's id exists
      * if exists then, add the reduced amount from sender's account to the receiver's account

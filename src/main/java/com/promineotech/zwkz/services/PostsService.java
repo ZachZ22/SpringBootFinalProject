@@ -30,8 +30,8 @@ public interface PostsService {
      * @param input
      * @return
      */
+    Posts save( Posts input);
+
+
     Posts save(String id, Posts input);
-
-
-
 }

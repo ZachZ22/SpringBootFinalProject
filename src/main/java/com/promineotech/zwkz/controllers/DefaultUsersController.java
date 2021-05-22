@@ -1,6 +1,7 @@
 package com.promineotech.zwkz.controllers;
 
 import com.promineotech.zwkz.entities.Users;
+import com.promineotech.zwkz.services.UsersService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -8,12 +9,10 @@ import com.promineotech.zwkz.services.DefaultUsersService;
 
 @RestController
 public class DefaultUsersController implements UsersController{
-    private DefaultUsersService _service;
+    private UsersService _service;
 
-//    public DefaultUsersController(UsersService service){_service = service;}
-
-
-    @RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
+    public DefaultUsersController(UsersService service){this._service = service;}
+    @GetMapping(value = "/users/{id}")
     @Override
     public Users get(@PathVariable String id) {
         Users users = _service.get(id);
@@ -37,8 +36,8 @@ public class DefaultUsersController implements UsersController{
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                 String.format("User input was empty or null"));
-
     }
+
     @RequestMapping(value = "/users/update/{id}", method=RequestMethod.PUT)
     @Override
     public Users update(@PathVariable String id, @RequestBody Users input) {
