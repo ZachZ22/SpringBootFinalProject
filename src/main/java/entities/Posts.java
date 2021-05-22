@@ -13,8 +13,8 @@ import java.util.Date;
 @AllArgsConstructor
 public class Posts {
 
-    private long post_id;
-    private int user_id;
+    private String post_id;
+    private String user_id;
     private String post;
     private Date date_time;
 }

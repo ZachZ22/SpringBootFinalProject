@@ -1,5 +1,6 @@
 package services;
 import entities.Accounts;
+import repository.AccountsJdbcRepository;
 
 public class DefaultAccountsService implements AccountsService {
     private AccountsJdbcRepository _repository;

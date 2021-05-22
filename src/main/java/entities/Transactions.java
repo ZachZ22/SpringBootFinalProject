@@ -19,7 +19,7 @@ public class Transactions {
     private int transaction_id;
 
     //one user can have many transactions
-    @ManyToOne (fetch = FetchType.LAZY, mappedBy = "user_id");
+    //@ManyToOne (fetch = FetchType.LAZY, mappedBy = "user_id");
     private int user_id;
     private Date date_time;
     private int amount;

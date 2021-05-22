@@ -20,7 +20,7 @@ public class PostsJdbcRepository implements PostsRepository {
     private NamedParameterJdbcTemplate _provider;
 
     @Override
-    public Posts get(String id) {
+    public Posts get(String  id) {
         String sql = "SELECT post " +
                 "FROM posts " +
                 "WHERE post_id = : post_id";

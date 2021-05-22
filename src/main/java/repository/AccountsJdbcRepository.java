@@ -27,7 +27,7 @@ public class AccountsJdbcRepository implements AccountsRepository {
             @Override
             public Accounts mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return Accounts.builder()
-                        .account_number(rs.getString("account_id"))
+                        .account_number(Integer.parseInt(rs.getString("account_id")))
 
                         .build();
             }
@@ -49,7 +49,7 @@ public class AccountsJdbcRepository implements AccountsRepository {
             @Override
             public Accounts mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return Accounts.builder()
-                        .balance(rs.getString("account_id"))
+                        .balance(Integer.parseInt(rs.getString("account_id")))
 
                         .build();
             }
@@ -70,7 +70,7 @@ public class AccountsJdbcRepository implements AccountsRepository {
             @Override
             public Accounts mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return Accounts.builder()
-                        .account_number(rs.getString("account_id"))
+                        .account_number(Integer.parseInt(rs.getString("account_id")))
 
                         .build();
             }
@@ -128,31 +128,10 @@ public class AccountsJdbcRepository implements AccountsRepository {
         return (null);
     }
 
+
     @Override
     public Accounts saveBalance(String id, String UpdateBalanceAmount) {
-        if ((id == null) || (id.isEmpty())) {
-            return (null);
-        }
-        if (UpdateBalanceAmount == null) {
-            return null;
-        }
-        //Check if User Exists
-        Accounts existing = get(id);
-        if (existing != null) {
-            // Update the item if exists
-            String sql = "UPDATE accounts SET" +
-                    "account_id = :account_id" +
-                    "balance = :balance" +
-                    "WHERE" +
-                    "account_id = existing_account_id";
-            MapSqlParameterSource parameters = new MapSqlParameterSource();
-            parameters.addValue("balance", input.getBalance());
 
-            int numRows = _provider.update(sql, parameters);
-            if (numRows == 1) {
-                return (get(input.getAccount_id()));
-            }
-        }
         return null;
     }
 
