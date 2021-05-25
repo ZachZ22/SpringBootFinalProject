@@ -1,6 +1,7 @@
 package com.promineotech.zwkz.repository;
 
 import com.promineotech.zwkz.entities.Accounts;
+import com.promineotech.zwkz.entities.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -21,7 +22,7 @@ public class AccountsJdbcRepository implements AccountsRepository {
 
     @Override
     public Accounts get(String id) {
-        String sql = " Select account_id,balance " +
+        String sql = " Select account_id,balance, account_number " +
                 " From accounts " +
                 " Where account_id = :account_id ";
         Map<String, Object> parameters = new HashMap<>();
@@ -32,6 +33,7 @@ public class AccountsJdbcRepository implements AccountsRepository {
                 return Accounts.builder()
                         .account_id(rs.getString("account_id"))
                         .balance(rs.getInt("balance"))
+                        .account_number(rs.getInt("account_number"))
                         .build();
             }
         });
@@ -58,47 +60,49 @@ public class AccountsJdbcRepository implements AccountsRepository {
         });
     }
 
-    @Override
-    public Accounts getBalance(String id) {
-        String sql = " Select balance " +
-                " From accounts " +
-                " Where account_id = :account_id ";
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("account_id", id);
-        List<Accounts> accounts = _provider.query(sql, parameters, new RowMapper<Accounts>() {
-            @Override
-            public Accounts mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return Accounts.builder()
-                        .balance(rs.getInt("balance"))
-                        .build();
-            }
-        });
-        if (accounts.isEmpty()) {
-            return null;
-        }
-        return accounts.get(0);
-    }
-    @Override
-    public Accounts getAccountNumber(String id) {
-        String sql = "Select account_number" +
-                "From accounts" +
-                "Where account_id = :account_id";
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("account_id", id);
-        List<Accounts> accounts = _provider.query(sql, parameters, new RowMapper<Accounts>() {
-            @Override
-            public Accounts mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return Accounts.builder()
-                        .account_number(rs.getInt("account_id"))
+//    @Override
+//    public Accounts getBalance(String id) {
+//        String sql = " Select balance " +
+//                " From accounts " +
+//                " Where account_id = :account_id ";
+//        Map<String, Object> parameters = new HashMap<>();
+//        parameters.put("account_id", id);
+//        List<Accounts> accounts = _provider.query(sql, parameters, new RowMapper<Accounts>() {
+//            @Override
+//            public Accounts mapRow(ResultSet rs, int rowNum) throws SQLException {
+//                return Accounts.builder()
+//                        .balance(rs.getInt("balance"))
+//                        .build();
+//            }
+//        });
+//        if (accounts.isEmpty()) {
+//            return null;
+//        }
+//        return accounts.get(0);
+//    }
+//
+//    @Override
+//    public Accounts getAccountNumber(String id) {
+//        String sql = "Select account_number" +
+//                "From accounts" +
+//                "Where account_id = :account_id";
+//        Map<String, Object> parameters = new HashMap<>();
+//        parameters.put("account_id", id);
+//        List<Accounts> accounts = _provider.query(sql, parameters, new RowMapper<Accounts>() {
+//            @Override
+//            public Accounts mapRow(ResultSet rs, int rowNum) throws SQLException {
+//                return Accounts.builder()
+//                        .account_number(rs.getInt("account_id"))
+//
+//                        .build();
+//            }
+//        });
+//        if (accounts.isEmpty()) {
+//            return null;
+//        }
+//        return accounts.get(0);
+//    }
 
-                        .build();
-            }
-        });
-        if (accounts.isEmpty()) {
-            return null;
-        }
-        return accounts.get(0);
-    }
     @Override
     public Accounts create(Accounts input) {
         if (input != null) {
@@ -119,7 +123,7 @@ public class AccountsJdbcRepository implements AccountsRepository {
 
 
     @Override
-    public Accounts save(Accounts input) {
+    public Accounts save(String id, Accounts input) {
 //        if ((id == null) || (id.isEmpty())) {
 //            return (null);
 //        }
@@ -130,11 +134,12 @@ public class AccountsJdbcRepository implements AccountsRepository {
         Accounts existing = get(input.getAccount_id());
         if (existing != null) {
             // Update the item if exists
-            String sql = "UPDATE accounts SET" +
-                    " account_id = :account_id" +
-                    " account_number = :account_number" +
-                     " balance = :balance" +
-                    " WHERE" +
+            //UPDATE accounts SET balance = "23000" WHERE account_id = 1;
+            String sql = " UPDATE accounts SET " +
+                    // " account_id = :account_id" +
+                    // " account_number = :account_number" +
+                    " balance = :balance " +
+                    " WHERE " +
                     " account_id = existing_account_id";
             MapSqlParameterSource parameters = new MapSqlParameterSource();
             parameters.addValue("account_id", input.getAccount_id());
@@ -149,17 +154,17 @@ public class AccountsJdbcRepository implements AccountsRepository {
         return null;
     }
 
-
-    @Override
-    public Accounts saveBalance(String id, String UpdateBalanceAmount) {
-
-        return null;
-    }
+//
+//    @Override
+//    public Accounts saveBalance(String id, String UpdateBalanceAmount) {
+//
+//        return null;
+//    }
 
     @Override
     public Accounts delete(String id) {
         if ((id == null) || (id.isEmpty())) {
-            return(null);
+            return (null);
         }
         // Get existing item
         Accounts existing = get(id);
@@ -169,15 +174,9 @@ public class AccountsJdbcRepository implements AccountsRepository {
             parameters.addValue("user_id", id);
             int numRows = _provider.update(sql, parameters);
             if (numRows == 1) {
-                return(existing);
+                return (existing);
             }
         }
-        return(null);
+        return (null);
     }
-
-    @Override
-    public Accounts save(String id, Accounts input) {
-        return null;
-    }
-
 }

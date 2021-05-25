@@ -47,17 +47,19 @@ public class PostsJdbcRepository implements PostsRepository {
     @Override
     public Posts create(Posts input) {
         if (input != null) {
-            String sql = "INSERT INTO post(user_id, date_time, post) " +
-                    "VALUES (:user_id, :date_time, : post);";
+            //INSERT INTO posts (user_id, date_time, post) values (1, now(), "Yo Zach, Heres the money I lost to you in poker last night." );
+            String sql = "INSERT INTO posts (user_id,date_time,post) " +
+                    "VALUES (:user_id, :date_time, :post);";
             MapSqlParameterSource parameters = new MapSqlParameterSource();
-            parameters.addValue("post_id", input.getPost_id());
+            //parameters.addValue("post_id", input.getPost_id());
             parameters.addValue("user_id", input.getUser_id());
-            parameters.addValue("post", input.getPost());
             parameters.addValue("date_time", input.getDate_time());
+            parameters.addValue("post", input.getPost());
+
 
             int numRows = _provider.update(sql, parameters);
             if (numRows == 1) {
-                return(get(input.getPost_id()));
+                return(get(input.getPost()));
             }
         }
         return null;
@@ -71,10 +73,9 @@ public class PostsJdbcRepository implements PostsRepository {
         //Get existing item
         Posts existing = get(id);
         if (existing != null) {
-            String sql = "DELETE FROM posts " +
-                    "WHERE post_id = :post_id";
+            String sql = "DELETE FROM posts WHERE post_id = :post_id";
             MapSqlParameterSource parameters = new MapSqlParameterSource();
-            parameters.addValue("posts_id", id);
+            parameters.addValue("post_id", id);
 
             int numRows = _provider.update(sql, parameters);
             if (numRows == 1) {
@@ -113,7 +114,13 @@ public class PostsJdbcRepository implements PostsRepository {
             parameters.addValue("existing_post_id", id);
             int numRows = _provider.update(sql, parameters);
             if (numRows == 1) {
-                return(get(input.getPost()));
+                try {
+                    Posts returnValue = get(input.getPost());
+                    return (returnValue);
+                } catch (Exception ex) {
+                    System.out.println(ex.getMessage());
+                    throw ex;
+                }
             }
         }
         return null;

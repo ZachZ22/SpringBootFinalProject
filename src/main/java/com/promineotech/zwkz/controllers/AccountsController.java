@@ -1,5 +1,6 @@
 package com.promineotech.zwkz.controllers;
 import com.promineotech.zwkz.entities.Accounts;
+import com.promineotech.zwkz.entities.Users;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -34,7 +35,6 @@ public interface AccountsController {
      */
     Accounts delete(String id);
     Accounts getAccountNumber(String id);
-
 
 
 }

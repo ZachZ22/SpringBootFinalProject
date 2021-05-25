@@ -48,8 +48,8 @@ public class UsersJdbcRepository implements UsersRepository {
     @Override
     public Users create(Users input) {
         if (input != null) {
-            String sql = "INSERT INTO users  (first_name,last_name,user_name,password)"
-                    + "VALUES (:first_name,:last_name,:user_name,:password);";
+            String sql = " INSERT INTO users (first_name,last_name,user_name,password) "
+                    + " VALUES (:first_name,:last_name,:user_name,:password);";
             MapSqlParameterSource parameters = new MapSqlParameterSource();
             parameters.addValue("user_id", input.getUser_id());
             parameters.addValue("first_name", input.getFirst_name());

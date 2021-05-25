@@ -1,13 +1,11 @@
-
 package com.promineotech.zwkz.controllers;
-
 import com.promineotech.zwkz.entities.Accounts;
+import com.promineotech.zwkz.entities.Users;
 import com.promineotech.zwkz.services.AccountsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import com.promineotech.zwkz.services.DefaultAccountsService;
-
 @RestController
 public class DefaultAccountsController implements AccountsController{
     private AccountsService _service;
@@ -21,31 +19,30 @@ public class DefaultAccountsController implements AccountsController{
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                 String.format("Account '%s' was not found.", id));
-
     }
-
-    @RequestMapping(value = "/account_number", method = RequestMethod.GET)
+    @GetMapping(value = "accounts/account_number/{id}")
     @Override
     public Accounts getAccountNumber(@PathVariable String id) {
-        Accounts accounts = _service.get(id);
-        if(accounts != null){
-            return (accounts);
+        Accounts account_number = _service.get(id);
+        if(account_number != null){
+            return (account_number);
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                String.format("Account '%s' was not found.", id));
+                String.format("Account number '%s' was not found.", id));
     }
-    @GetMapping(value = "/balance")
+
+
+
+    @GetMapping(value = "accounts/balance/{id}")
     @Override
     public Accounts getBalance(@PathVariable String id) {
-        Accounts accounts = _service.get(id);
-        if(accounts != null){
-            return (accounts);
+        Accounts balance= _service.get(id);
+        if(balance != null){
+            return (balance);
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                String.format("Account '%s' was not found.", id));
+                String.format("Balance '%s' was not found.", id));
     }
-
-
     @Override
     public Accounts delete(String id) {
         if ((id == null) || (id.isEmpty())) {
@@ -71,12 +68,19 @@ public class DefaultAccountsController implements AccountsController{
         // TODO Auto-generated method stub
         return null;
     }
-
-    //comment
+    @RequestMapping(value = "/accounts/update/{id}", method=RequestMethod.PUT)
     @Override
-    public Accounts update(String id, Accounts input) {
-        // TODO Auto-generated method stub
-        return null;
+    public Accounts update(@PathVariable String id, @RequestBody Accounts input) {
+        if ((id == null) || (id.isEmpty())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    String.format("The required Accounts identifier was empty or missing"));
+        }
+        if (input == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    String.format("An empty or missing Accounts was provided"));
+        }
+
+        return(_service.save(id, input));
     }
 
 }
